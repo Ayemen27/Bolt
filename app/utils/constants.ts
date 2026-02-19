@@ -402,7 +402,16 @@ async function getOllamaModels(apiKeys?: Record<string, string>, settings?: IPro
   try {
     const baseUrl = getOllamaBaseUrl(settings);
     const response = await fetch(`${baseUrl}/api/tags`);
+
+    if (!response.ok) {
+      throw new Error(`Ollama health check failed with status ${response.status}`);
+    }
+
     const data = (await response.json()) as OllamaApiResponse;
+
+    if (!data.models) {
+      return [];
+    }
 
     return data.models.map((model: OllamaModel) => ({
       name: model.name,
@@ -411,7 +420,7 @@ async function getOllamaModels(apiKeys?: Record<string, string>, settings?: IPro
       maxTokenAllowed: 8000,
     }));
   } catch (e: any) {
-    logStore.logError('Failed to get Ollama models', e, { baseUrl: settings?.baseUrl });
+    // logStore.logError('Failed to get Ollama models', e, { baseUrl: settings?.baseUrl });
     logger.warn('Failed to get Ollama models: ', e.message || '');
 
     return [];

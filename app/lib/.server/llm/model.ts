@@ -88,7 +88,9 @@ export function getOllamaModel(baseURL: string, model: string) {
     numCtx: DEFAULT_NUM_CTX,
   }) as LanguageModelV1 & { config: any };
 
-  ollamaInstance.config.baseURL = `${baseURL}/api`;
+  if (ollamaInstance.config) {
+    ollamaInstance.config.baseURL = `${baseURL}/api`;
+  }
 
   return ollamaInstance;
 }
