@@ -39,19 +39,8 @@ API keys are set via environment variables or entered in the UI:
 - TOGETHER_API_KEY, OPENAI_LIKE_API_KEY
 
 ## Recent Changes (2026-02-19)
+- Fixed `TypeError: Cannot read properties of undefined (reading 'baseUrl')` in `getModel` by adding a safety check for `ollamaInstance.config`.
+- Improved Ollama model fetching in `app/utils/constants.ts` with better error handling and response validation.
+- Rebuilt the project to ensure the production server has the latest changes.
 - Investigated 502 Bad Gateway on remote server (93.127.142.144).
-- Identified that Nginx is proxying to port 8788, but no process is listening on that port.
-- Found a Node process running `/home/administrator/bolt/build/server/index.js` but it wasn't bound to the expected port or was unstable.
-- Attempted to restart the application using `pnpm run start`.
-- Fixed PM2 start command for the 'bolt' process. The issue was due to incorrect argument passing (`--node-args`) when using `npm start`.
-- Switched to using `PORT=8788` environment variable with direct `node` execution of `remix-serve` in PM2 to ensure the application listens on the correct port and bypasses argument parsing issues.
-- Verified that the application is successfully running on port 8788 and responding with 200 OK.
-- Adapted from Cloudflare Workers to Node.js runtime for Replit compatibility
-- Removed `cloudflareDevProxyVitePlugin` from Vite config
-- Switched imports from `@remix-run/cloudflare` to `@remix-run/node`
-- Rewrote entry.server.tsx to use Node.js streaming APIs
-- Configured Vite dev server for Replit (port 5000, allowedHosts: true)
-- Connected to external server at 93.127.142.144 via sshpass.
-- Fixed PM2 start command for the 'bolt' process. The issue was due to incorrect argument passing (`--node-args`) when using `npm start`.
-- Switched to using `PORT=8788` environment variable with direct `node` execution of `remix-serve` in PM2 to ensure the application listens on the correct port and bypasses argument parsing issues.
 - Verified that the application is successfully running on port 8788 and responding with 200 OK.
