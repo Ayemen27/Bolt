@@ -399,12 +399,18 @@ const getOllamaBaseUrl = (settings?: IProviderSetting) => {
 };
 
 async function getOllamaModels(apiKeys?: Record<string, string>, settings?: IProviderSetting): Promise<ModelInfo[]> {
+  const isBrowser = typeof window !== 'undefined';
+
+  if (isBrowser) {
+    return [];
+  }
+
   try {
     const baseUrl = getOllamaBaseUrl(settings);
     const response = await fetch(`${baseUrl}/api/tags`);
 
     if (!response.ok) {
-      throw new Error(`Ollama health check failed with status ${response.status}`);
+      return [];
     }
 
     const data = (await response.json()) as OllamaApiResponse;
@@ -420,9 +426,6 @@ async function getOllamaModels(apiKeys?: Record<string, string>, settings?: IPro
       maxTokenAllowed: 8000,
     }));
   } catch (e: any) {
-    // logStore.logError('Failed to get Ollama models', e, { baseUrl: settings?.baseUrl });
-    logger.warn('Failed to get Ollama models: ', e.message || '');
-
     return [];
   }
 }
